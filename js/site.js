@@ -41,15 +41,19 @@
 
   /* ---------------- Mobile menu ---------------- */
   var menuBtn = $("[data-menu-btn]"), nav = $("[data-nav]");
-  function closeMenu() { if (!menuBtn) return; menuBtn.setAttribute("aria-expanded", "false"); nav.classList.remove("is-open"); }
+  var menuLabel = $("[data-menu-label]");
+  function closeMenu() { if (!menuBtn) return; menuBtn.setAttribute("aria-expanded", "false"); nav.classList.remove("is-open"); if (menuLabel) menuLabel.textContent = "Menu"; }
   if (menuBtn && nav) {
     menuBtn.addEventListener("click", function () {
       var open = menuBtn.getAttribute("aria-expanded") !== "true";
       menuBtn.setAttribute("aria-expanded", String(open));
       nav.classList.toggle("is-open", open);
+      if (menuLabel) menuLabel.textContent = open ? "Close" : "Menu";
     });
     nav.addEventListener("click", function (e) { if (e.target.closest("a")) closeMenu(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
+    // Tap anywhere outside the menu to close it
+    document.addEventListener("click", function (e) { if (nav.classList.contains("is-open") && !nav.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(); });
   }
 
   /* ---------------- Portfolio ---------------- */
