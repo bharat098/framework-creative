@@ -366,6 +366,6 @@ h1.is-split em{animation:mark .9s var(--ease) 1.05s both}
 .chip[aria-pressed="true"] .chip__n{opacity:1}
 
 /* Logo image (header and footer) */
-.logo img{height:36px;width:auto}
-.footer__brand img{height:30px;width:auto}
-@media (max-width:360px){.logo img{height:26px}}
+.logo img{height:38px;width:auto}
+.footer__brand img{height:34px;width:auto}
+@media (max-width:360px){.logo img{height:30px}}
