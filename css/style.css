@@ -236,7 +236,7 @@ button{cursor:pointer}
 
 /* 3D cover-flow of real designs */
 .flow{--h:clamp(340px,40vw,470px);position:relative;height:var(--h);margin-top:clamp(28px,4vw,44px);perspective:1400px;animation:rise 1.1s var(--ease) .25s both}
-.flow img{position:absolute;left:calc(50% - .4 * .84 * var(--h));top:6%;height:84%;width:auto;max-width:none;aspect-ratio:4/5;object-fit:cover;border-radius:14px;box-shadow:0 30px 50px -24px rgba(16,35,26,.45);animation:flow 15s cubic-bezier(.65,0,.35,1) infinite;animation-delay:var(--d)}
+.flow img{position:absolute;left:calc(50% - .4 * .84 * var(--h));top:6%;height:84%;width:auto;max-width:none;aspect-ratio:4/5;object-fit:cover;border-radius:14px;box-shadow:0 30px 50px -24px rgba(16,35,26,.45);animation:flow 9s cubic-bezier(.65,0,.35,1) infinite;animation-delay:var(--d)}
 .flow:hover img{animation-play-state:paused}
 @keyframes flow{
   0%,14%{transform:translateX(0) scale(1) rotateY(0);z-index:5;opacity:1;filter:none}
@@ -364,3 +364,8 @@ h1.is-split em{animation:mark .9s var(--ease) 1.05s both}
 /* Very small phones */
 @media (max-width:360px){.logo{font-size:13px;gap:8px}.site-header__in{gap:10px}.menu-btn{padding:8px 12px}}
 .chip[aria-pressed="true"] .chip__n{opacity:1}
+
+/* Logo image (header and footer) */
+.logo img{height:36px;width:auto}
+.footer__brand img{height:30px;width:auto}
+@media (max-width:360px){.logo img{height:26px}}
