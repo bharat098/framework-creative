@@ -52,7 +52,7 @@ button{cursor:pointer}
 .skip-link{position:absolute;left:12px;top:-60px;z-index:100;padding:10px 16px;border-radius:10px;background:var(--fg);color:#fff;font-weight:700;text-decoration:none;transition:top .2s}
 .skip-link:focus{top:12px}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
-.h2{font-family:var(--font-d);font-weight:600;font-size:clamp(26px,3.4vw,38px);line-height:1.1;letter-spacing:-.03em;text-wrap:balance}
+.h2{font-family:var(--font-d);font-weight:600;font-size:clamp(22px,2.7vw,31px);line-height:1.1;letter-spacing:-.03em;text-wrap:balance}
 .lead{font-size:clamp(16px,1.6vw,18px);color:var(--muted);max-width:60ch}
 .sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 40px;margin-bottom:clamp(28px,4vw,44px)}
 .sec-head__text{display:grid;gap:12px;justify-items:start;min-width:0}
@@ -168,7 +168,7 @@ button{cursor:pointer}
 .plan__price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px}
 .plan__from{font-size:13px;opacity:.75}
 .price{display:inline-block}
-.plan__price .price{font-family:var(--font-d);font-size:clamp(32px,4vw,40px);font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.plan__price .price{font-family:var(--font-d);font-size:clamp(28px,3.2vw,34px);font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .price.flip{animation:flip .5s var(--ease)}
 .plan__per{font-size:14px;opacity:.75}
 .plan__sum{opacity:.85}
@@ -226,7 +226,7 @@ button{cursor:pointer}
 .blob--a{width:340px;height:340px;left:-120px;top:40px;background:var(--mint);animation:float 14s ease-in-out infinite}
 .blob--b{width:280px;height:280px;right:-100px;top:200px;background:#d7f2e4;animation:float 17s ease-in-out -6s infinite reverse}
 .hero__text{position:relative;display:grid;justify-items:center;text-align:center;gap:18px}
-.hero h1{font-family:var(--font-d);font-weight:600;font-size:clamp(30px,4.4vw,52px);line-height:1.12;letter-spacing:-.04em;max-width:860px;text-wrap:balance}
+.hero h1{font-family:var(--font-d);font-weight:600;font-size:clamp(26px,3.5vw,42px);line-height:1.15;letter-spacing:-.04em;max-width:860px;text-wrap:balance}
 .hero h1 em{font-style:normal;color:var(--accent);background:linear-gradient(var(--mint),var(--mint)) no-repeat 0 88%/100% 26%}
 .hero .lead{text-align:center}
 .hero__ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px}
@@ -281,7 +281,7 @@ button{cursor:pointer}
 .about__in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(28px,5vw,64px);align-items:center}
 .about__badge,.about__photo{aspect-ratio:1;max-width:280px;width:100%;border-radius:28px;box-shadow:14px 14px 0 -2px var(--mint)}
 .about__photo{object-fit:cover}
-.about__badge{display:grid;place-items:center;background:var(--accent);color:#fff;font-family:var(--font-d);font-weight:700;font-size:clamp(48px,7vw,80px)}
+.about__badge{display:grid;place-items:center;background:var(--accent);color:#fff;font-family:var(--font-d);font-weight:700;font-size:clamp(42px,6vw,68px)}
 .about__badge span{animation:float 8s ease-in-out infinite}
 .about__text{display:grid;gap:16px;min-width:0}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:8px}
