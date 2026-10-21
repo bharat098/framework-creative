@@ -1,0 +1,68 @@
+# Pulls new/changed designs from your Canva website folder into the site library.
+# Runs every day and whenever you press "Run workflow" in the Actions tab.
+# Setup: see README → "Automatic Canva library sync".
+name: Sync Canva library
+
+on:
+  schedule:
+    - cron: "17 1 * * *"   # daily at 01:17 UTC (06:47 IST)
+  workflow_dispatch:
+
+# Never run two syncs at once — they would both try to use the same single-use Canva token.
+concurrency:
+  group: canva-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SYNC_PAT }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Pull designs from Canva
+        env:
+          CANVA_CLIENT_ID: ${{ secrets.CANVA_CLIENT_ID }}
+          CANVA_CLIENT_SECRET: ${{ secrets.CANVA_CLIENT_SECRET }}
+          CANVA_REFRESH_TOKEN: ${{ secrets.CANVA_REFRESH_TOKEN }}
+          CANVA_FOLDER_ID: ${{ secrets.CANVA_FOLDER_ID }}
+          TOKEN_OUT: ${{ runner.temp }}/canva_refresh_token
+        run: node scripts/canva-sync.mjs
+
+      # Canva refresh tokens work once. Save the new one even if a later step fails.
+      - name: Save the new Canva token
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+        run: |
+          f="${{ runner.temp }}/canva_refresh_token"
+          if [ -s "$f" ]; then
+            gh secret set CANVA_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" < "$f"
+            rm -f "$f"
+            echo "Saved the rotated refresh token."
+          else
+            echo "No new token to save."
+          fi
+
+      - name: Publish changes
+        run: |
+          git config user.name  "canva-sync"
+          git config user.email "canva-sync@users.noreply.github.com"
+          git add assets/library js/library.js
+          if git diff --cached --quiet; then
+            echo "Library already up to date."
+          else
+            git commit -m "Sync design library from Canva"
+            git push
+          fi

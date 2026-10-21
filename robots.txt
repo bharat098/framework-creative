@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Replace with your live address
+Sitemap: https://bharat098.github.io/framework-creative/sitemap.xml
