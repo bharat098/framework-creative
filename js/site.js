@@ -78,7 +78,7 @@
     }
     grid.innerHTML = items.map(function (it, i) {
       var wide = (it.width || 1) / (it.height || 1) > 1.2;
-      return '<button class="w-card' + (wide ? " w-card--wide" : "") + '" type="button" data-i="' + i + '" data-type="' + esc(it.type) + '" aria-haspopup="dialog" style="--i:' + (i % 8) + '">' +
+      return '<button class="w-card' + (wide ? " w-card--wide" : "") + '" type="button" data-i="' + i + '" data-type="' + esc(it.type) + '" aria-haspopup="dialog" data-reveal style="--i:' + (i % 8) + '">' +
         '<span class="w-card__img"><img src="' + esc(it.pages[0]) + '" alt="" width="' + (it.width || 400) + '" height="' + (it.height || 500) + '" loading="' + (i < 8 ? "eager" : "lazy") + '" decoding="async">' +
         (it.pages.length > 1 ? '<span class="w-card__pages">' + it.pages.length + " pages</span>" : "") +
         '<span class="w-card__zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></span></span>' +
@@ -419,4 +419,63 @@
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
   if (toTop) toTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
+  /* =================== MOTION v2 =================== */
+  // Rotating word in the hero ("I design ___")
+  var rot = $("[data-rotator]");
+  if (rot) {
+    var words = $$("span", rot), wi = 0;
+    words[0].classList.add("is-on");
+    var fit = function (el) { rot.style.width = Math.ceil(el.getBoundingClientRect().width) + "px"; };
+    var fitNow = function () { fit(words[wi]); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitNow); else fitNow();
+    window.addEventListener("resize", fitNow);
+    if (!reduce && words.length > 1) setInterval(function () {
+      var cur = words[wi]; wi = (wi + 1) % words.length; var nxt = words[wi];
+      cur.classList.remove("is-on"); cur.classList.add("is-out");
+      nxt.classList.remove("is-out"); nxt.classList.add("is-on"); fit(nxt);
+      setTimeout(function () { cur.classList.remove("is-out"); }, 600);
+    }, 2200);
+  }
+
+  // Section titles split into words (revealed with their section)
+  if (!reduce) $$(".h2").forEach(function (h) {
+    var k = 0;
+    h.innerHTML = h.textContent.trim().split(/\s+/).map(function (w) {
+      return '<span class="word" style="--w:' + (k++) + '">' + esc(w) + "</span>";
+    }).join(" ");
+    h.classList.add("is-split");
+  });
+
+  if (finePointer && !reduce) {
+    // Buttons lean towards the pointer
+    $$("[data-magnetic]").forEach(function (b) {
+      b.addEventListener("pointermove", function (e) {
+        var r = b.getBoundingClientRect();
+        b.style.transform = "translate(" + ((e.clientX - r.left - r.width / 2) * 0.18).toFixed(1) + "px," + ((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1) + "px)";
+      });
+      b.addEventListener("pointerleave", function () { b.style.transform = ""; });
+    });
+    // Soft green light follows the pointer in the hero and on service cards
+    var hero = $(".hero");
+    if (hero) hero.addEventListener("pointermove", function (e) {
+      var r = hero.getBoundingClientRect();
+      hero.style.setProperty("--mx", (e.clientX - r.left) + "px"); hero.style.setProperty("--my", (e.clientY - r.top) + "px");
+    });
+    $$(".svc").forEach(function (c) {
+      c.addEventListener("pointermove", function (e) {
+        var r = c.getBoundingClientRect();
+        c.style.setProperty("--sx", (e.clientX - r.left) + "px"); c.style.setProperty("--sy", (e.clientY - r.top) + "px");
+      });
+    });
+  }
+
+  // Hero designs drift slightly slower than the page (parallax)
+  var par = $("[data-parallax]");
+  if (par && !reduce) {
+    var pTick = false;
+    window.addEventListener("scroll", function () {
+      if (pTick) return; pTick = true;
+      requestAnimationFrame(function () { pTick = false; var y = window.scrollY || 0; if (y < innerHeight * 1.2) par.style.setProperty("--py", (y * 0.12).toFixed(1)); });
+    }, { passive: true });
+  }
 })();
