@@ -28,7 +28,7 @@ window.FC_CONFIG = {
        formEndpoint     → a form service such as Formspree
      Nothing is ever reported as "sent" unless the service confirms it.
   */
-  googleScriptUrl: "",
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbw8YUT75wEr_EIEGZy-91lx7pClK9cK3uezDC78bV6ZI4FHTQ0fY6Gs5KMSOeRpmOW66Q/exec",
   formEndpoint: "",
   salesforce: {
     orgId: "",            // 15 or 18 characters, from Salesforce Setup → Company Information
