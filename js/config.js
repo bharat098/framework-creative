@@ -20,12 +20,15 @@ window.FC_CONFIG = {
   instagram: "",
 
   /* ---------- Contact form: how enquiries are sent ----------
-     The form tries these in order:
-       1. salesforce.orgId  → creates a Lead in your Salesforce org (Web-to-Lead)
-       2. formEndpoint      → a form service such as Formspree, e.g. "https://formspree.io/f/abcdwxyz"
-       3. neither set       → opens the visitor's email app with the message pre-filled
+     googleScriptUrl → your Google Apps Script web app address (ends in /exec).
+                       Saves each enquiry to your Google Sheet, emails you, and sends the
+                       visitor an automatic reply. Setup: README → "Contact form".
+     Alternatives (used only if googleScriptUrl is empty):
+       salesforce.orgId → creates a Lead in Salesforce (Web-to-Lead)
+       formEndpoint     → a form service such as Formspree
      Nothing is ever reported as "sent" unless the service confirms it.
   */
+  googleScriptUrl: "",
   formEndpoint: "",
   salesforce: {
     orgId: "",            // 15 or 18 characters, from Salesforce Setup → Company Information

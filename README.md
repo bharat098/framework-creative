@@ -59,22 +59,24 @@ INR and EUR are separate prices, not conversions. Visitors whose time zone is in
 
 If you change colours, re-check text contrast with a contrast checker (for example WebAIM's). Aim for at least 4.5:1 for normal text.
 
-## Contact form
+## Contact form (Google Sheet + Gmail)
 
-The form checks the visitor's details first. It then sends them using the first option that's set up in `js/config.js`:
+Every enquiry is saved to a Google Sheet, emailed to you (press Reply to answer the visitor), and the visitor gets an automatic confirmation email. It's free and the emails come from your own Gmail.
 
-1. **Salesforce Web-to-Lead** (`salesforce.orgId`). This creates a Lead in your Salesforce org. The visitor is redirected to Salesforce and back, and the page then shows a thank-you note.
-   - Use **your own** Salesforce org, not an employer's.
-   - In Setup, search for **Web-to-Lead** and make sure it's enabled. The Org ID is under Company Information.
-   - Salesforce redirects back even if it couldn't create the lead, so the note means "submitted", not "guaranteed". After setup, send a test and confirm the Lead appears.
-   - Project type and budget are sent in the Lead's Description.
-2. **A form service** (`formEndpoint`), such as Formspree. The form sends directly and shows success only if the service confirms it, or an error with your email as a backup.
-   - The hidden spam trap is named `_gotcha`. As far as I know that's Formspree's convention; please check their current docs.
-3. **Neither set (current default).** The form opens the visitor's email app with the message ready. The page says clearly that nothing is sent until they press Send.
+**Setup (about 10 minutes, once):**
+1. Signed in as the Gmail that should send and receive the emails, create a new Google Sheet (sheets.new), e.g. "Framework Creative — Enquiries".
+2. In the sheet: **Extensions → Apps Script**. Delete what's there and paste everything from `scripts/google-apps-script/Code.gs`. Check `OWNER_EMAIL` at the top. Save.
+3. In the function menu choose **setup** → **Run**. Google asks for permission. Because it's your own script, you'll see an "unverified app" warning: **Advanced → Go to (project name) → Allow**.
+4. **Deploy → New deployment →** type **Web app**. Execute as: **Me**. Who has access: **Anyone**. Deploy, and copy the **Web app URL** (ends in `/exec`).
+5. Put that URL into `googleScriptUrl` in `js/config.js` (or send it to Claude to do it).
+6. Send a test enquiry from the live site, and check that you got the email, the visitor copy, and a new row in the sheet.
 
-The form never shows a fake "sent" message.
-
-I'm not a lawyer. If you collect enquiries from EU clients, check your GDPR obligations (for example, a short privacy note) with a qualified advisor.
+Notes:
+- Google limits consumer Gmail accounts to about **100 email recipients a day** for scripts. Each enquiry uses 2 (you + visitor), so roughly 50 enquiries a day. Check Google's current Apps Script quota page if that matters.
+- If you edit `Code.gs` later: **Deploy → Manage deployments → Edit → Version: New version → Deploy** (the URL stays the same).
+- Until `googleScriptUrl` is set, the form says honestly that it isn't connected and shows your email address. It never shows a fake "sent".
+- A hidden spam-trap field stops simple bots; identical re-sends within 2 minutes are ignored.
+- I'm not a lawyer: enquiries are stored in your Google account, so for EU visitors consider a short privacy note.
 
 ## Animations
 

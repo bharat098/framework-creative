@@ -476,3 +476,45 @@ h1.is-split em{animation:mark .9s var(--ease) 1.05s both}
   .reveal-on .w-card[data-reveal]:not(.is-in) .w-card__img{clip-path:none}
   .flow{translate:none}
 }
+
+/* =====================================================================
+   9. Contact v2 — steps, send button, success card
+   ===================================================================== */
+.contact__in{align-items:stretch}
+.contact__side{gap:18px}
+.next{display:grid;gap:4px;margin:6px 0 0;padding:0;list-style:none;position:relative}
+.next::before{content:"";position:absolute;left:21px;top:30px;bottom:30px;width:2px;background:linear-gradient(var(--accent),var(--mint));border-radius:2px;transform-origin:top;transition:transform 1.2s var(--ease) .3s}
+.reveal-on .contact__side:not(.is-in) .next::before{transform:scaleY(0)}
+.next__item{position:relative;display:flex;gap:16px;align-items:flex-start;padding:12px 14px 12px 0;border-radius:14px;transition:background .3s,transform .3s var(--ease)}
+.next__item:hover{transform:translateX(4px)}
+.next__n{position:relative;z-index:1;flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--card);border:1.5px solid var(--accent);color:var(--accent);font-family:var(--font-d);font-weight:700;font-size:16px;box-shadow:0 8px 16px -10px rgba(14,122,78,.6)}
+.next__item:last-child .next__n{background:var(--accent);color:#fff}
+.next__t{font-family:var(--font-d);font-weight:600;font-size:15px;margin-bottom:2px}
+.next__item p{color:var(--muted);font-size:14.5px}
+.reveal-on .contact__side .next__item{transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal-on .contact__side:not(.is-in) .next__item{opacity:0;transform:translateX(-16px)}
+.contact__side .next__item:nth-child(2){transition-delay:.15s}.contact__side .next__item:nth-child(3){transition-delay:.3s}
+
+.form{position:relative;box-shadow:0 30px 60px -40px rgba(16,35,26,.35)}
+.form::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(135deg,var(--accent),transparent 35%,transparent 65%,var(--mint));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.field select{appearance:none;-webkit-appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%230e7a4e' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--accent)}
+.btn--send{min-width:190px}
+.send-ico{width:18px;height:18px;transition:transform .45s var(--ease)}
+.btn--send:hover .send-ico{transform:translate(4px,-4px) rotate(-8deg)}
+.form.is-sending .send-ico{animation:fly 1s var(--ease) infinite}
+.form.is-sending [data-submit]::before{display:none}
+
+.sent{display:grid;justify-items:center;align-content:center;gap:10px;text-align:center;padding:clamp(28px,5vw,56px);border-radius:var(--radius-card);background:var(--card);border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(16,35,26,.35);animation:pop-in .5s var(--ease)}
+.sent[hidden]{display:none}
+.sent:focus{outline:none}
+.sent__check{width:72px;height:72px;color:var(--accent)}
+.sent__check circle{stroke-dasharray:151;stroke-dashoffset:151;animation:dash .7s var(--ease) .1s forwards}
+.sent__check path{stroke-dasharray:36;stroke-dashoffset:36;animation:dash .45s var(--ease) .6s forwards}
+.sent__title{font-family:var(--font-d);font-weight:600;font-size:clamp(20px,2.4vw,26px);letter-spacing:-.02em}
+.sent p{color:var(--muted);max-width:42ch}
+.sent strong{color:var(--fg)}
+@keyframes dash{to{stroke-dashoffset:0}}
+@keyframes fly{0%{transform:none;opacity:1}50%{transform:translate(10px,-10px);opacity:0}51%{transform:translate(-10px,10px);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sent__check circle,.sent__check path{stroke-dashoffset:0}}
+.form[hidden]{display:none}

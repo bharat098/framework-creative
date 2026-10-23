@@ -269,12 +269,9 @@
   var sfOrg = String(sf.orgId || "").trim();
   var useSF = /^[A-Za-z0-9]{15}([A-Za-z0-9]{3})?$/.test(sfOrg);
   var endpoint = String(CFG.formEndpoint || "").trim();
-  if (modeEl) {
-    modeEl.textContent = useSF || endpoint
-      ? "Your enquiry goes straight to my inbox. I usually reply within a couple of working days."
-      : "This opens your email app with your message ready. Nothing is sent until you press Send there.";
-  }
-  if (submitBtn && !useSF && !endpoint) submitBtn.textContent = "Open in my email app";
+  var gsUrl = String(CFG.googleScriptUrl || "").trim();
+  var connected = useSF || !!gsUrl || !!endpoint;
+  if (modeEl) modeEl.textContent = connected ? "Sent straight to my inbox. You'll get a confirmation email too." : "";
 
   function say(kind, text) { status.className = "form__status is-" + kind; status.textContent = text; }
   if (form) form.addEventListener("submit", function (e) {
@@ -296,7 +293,7 @@
     var v = function (id) { var el = $(id); return el ? el.value.trim() : ""; };
     var data = { name: v("#f-name"), email: v("#f-email"), company: v("#f-company"), type: v("#f-type"), budget: v("#f-budget"), message: v("#f-msg") };
 
-    if (useSF) {
+    if (useSF && !gsUrl) {
       var parts = data.name.split(/\s+/), last = parts.pop(), first = parts.join(" ");
       var fields = {
         oid: sfOrg,
@@ -309,26 +306,43 @@
       post.method = "POST"; post.action = "https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"; post.hidden = true;
       Object.keys(fields).forEach(function (k) { var i = document.createElement("input"); i.type = "hidden"; i.name = k; i.value = fields[k]; post.appendChild(i); });
       document.body.appendChild(post);
-      submitBtn.disabled = true; submitBtn.textContent = "Sending…";
+      submitBtn.disabled = true; submitBtn.querySelector("[data-submit-label]").textContent = "Sending…";
       post.submit();
       return;
     }
-    if (endpoint) {
-      submitBtn.disabled = true; submitBtn.textContent = "Sending…"; form.classList.add("is-sending");
-      fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data) })
-        .then(function (r) {
-          if (!r.ok) throw new Error(r.status);
-          form.reset();
-          say("ok", "Thank you — your enquiry was sent. I'll reply to " + data.email + ".");
-          form.classList.add("is-sent");
-        })
-        .catch(function () { say("error", "Your message couldn't be sent. Please try again, or email me at " + EMAIL + "."); })
-        .then(function () { submitBtn.disabled = false; submitBtn.textContent = "Send enquiry"; form.classList.remove("is-sending"); });
+    var sending = function () { submitBtn.disabled = true; submitBtn.querySelector("[data-submit-label]").textContent = "Sending…"; form.classList.add("is-sending"); say("", ""); };
+    var finished = function () { submitBtn.disabled = false; submitBtn.querySelector("[data-submit-label]").textContent = "Send enquiry"; form.classList.remove("is-sending"); };
+    var failed = function () { say("error", "Sorry — your message couldn't be sent. Please try again, or email me at " + EMAIL + "."); };
+    var succeeded = function () {
+      var card = $("[data-sent]");
+      if (card) {
+        $("[data-sent-name]", card).textContent = data.name.split(/\s+/)[0];
+        $("[data-sent-email]", card).textContent = data.email;
+        form.hidden = true; card.hidden = false; card.focus();
+      } else say("ok", "Thank you — your enquiry was sent.");
+      form.reset();
+    };
+    if (gsUrl) {
+      // Google Apps Script web app: a "simple" form-encoded POST (no preflight); the script answers with JSON
+      sending();
+      var body = new URLSearchParams({ name: data.name, email: data.email, company: data.company, type: data.type, budget: data.budget, message: data.message, page: location.href, _gotcha: trap ? trap.value : "" });
+      fetch(gsUrl, { method: "POST", body: body })
+        .then(function (r) { return r.json(); })
+        .then(function (res) { if (res && res.ok) succeeded(); else failed(); })
+        .catch(failed)
+        .then(finished);
       return;
     }
-    var body = "Name: " + data.name + "\nEmail: " + data.email + "\nCompany: " + (data.company || "-") + "\nProject type: " + data.type + "\nBudget: " + data.budget + "\n\n" + data.message;
-    location.href = "mailto:" + EMAIL + "?subject=" + encodeURIComponent("Project enquiry — " + data.type) + "&body=" + encodeURIComponent(body);
-    say("ok", "Your email app should open with the message ready — press Send there. If nothing opened, email me at " + EMAIL + ".");
+    if (endpoint) {
+      sending();
+      fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data) })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); succeeded(); })
+        .catch(failed)
+        .then(finished);
+      return;
+    }
+    // Not connected yet: say so honestly instead of pretending to send
+    say("error", "The form isn't connected yet. Please email me directly at " + EMAIL + ".");
   });
   try {
     if (new URLSearchParams(location.search).get("enquiry") === "sent" && status) {
@@ -336,16 +350,6 @@
       history.replaceState(null, "", location.pathname + "#contact");
     }
   } catch (e) {}
-
-  var copyBtn = $("[data-copy]");
-  if (copyBtn) copyBtn.addEventListener("click", function () {
-    var done = function (ok) {
-      copyBtn.textContent = ok ? "Copied ✓" : "Select the address to copy";
-      setTimeout(function () { copyBtn.textContent = "Copy email"; }, 2000);
-    };
-    try { navigator.clipboard.writeText(EMAIL).then(function () { done(true); }, function () { done(false); }); }
-    catch (e) { done(false); }
-  });
 
   /* =================== ANIMATIONS =================== */
 

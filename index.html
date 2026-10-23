@@ -209,12 +209,12 @@
       <div class="contact__side" data-reveal>
         <p class="eyebrow">Contact</p>
         <h2 class="h2" id="contact-title">Got a project? Let's talk.</h2>
-        <p class="lead">Tell me what you need. I reply with questions, ideas and a clear quote.</p>
-        <div class="mail">
-          <span class="mail__label">Email</span>
-          <span class="mail__addr" data-email>bharatmohanty06@gmail.com</span>
-          <button class="btn btn--ghost mail__copy" type="button" data-copy>Copy email</button>
-        </div>
+        <p class="lead">Tell me what you need. I'll reply by email with questions, ideas and a clear quote.</p>
+        <ol class="next">
+          <li class="next__item"><span class="next__n" aria-hidden="true">1</span><div><h3 class="next__t">You send the form</h3><p>It comes straight to my inbox — no email app needed.</p></div></li>
+          <li class="next__item"><span class="next__n" aria-hidden="true">2</span><div><h3 class="next__t">You get a confirmation</h3><p>An automatic email with a copy of your message.</p></div></li>
+          <li class="next__item"><span class="next__n" aria-hidden="true">3</span><div><h3 class="next__t">I reply personally</h3><p>With questions, ideas and a quote in ₹ or €.</p></div></li>
+        </ol>
         <div class="social" data-links></div>
       </div>
       <form class="form" data-form novalidate data-reveal>
@@ -244,9 +244,15 @@
         </div>
         <div class="field field--full"><label for="f-msg">About your project</label><textarea id="f-msg" name="message" placeholder="What do you need, who is it for, and where will it be used?"></textarea></div>
         <div class="hp" aria-hidden="true"><label for="f-website">Leave this empty</label><input id="f-website" name="_gotcha" tabindex="-1" autocomplete="off"></div>
-        <div class="form__foot"><button class="btn btn--primary" type="submit" data-submit>Send enquiry</button><p class="form__mode" data-form-mode></p></div>
+        <div class="form__foot"><button class="btn btn--primary btn--send" type="submit" data-submit><span data-submit-label>Send enquiry</span><svg class="send-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l16-8-6 16-2.5-6.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button><p class="form__mode" data-form-mode></p></div>
         <p class="form__status" role="status" aria-live="polite" data-status></p>
       </form>
+      <div class="sent" data-sent hidden tabindex="-1" role="status">
+        <svg class="sent__check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l7 7 15-16" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 class="sent__title">Thanks, <span data-sent-name></span> — message sent!</h3>
+        <p>A confirmation is on its way to <strong data-sent-email></strong>. If you don't see it, check your spam folder.</p>
+        <p>I'll reply personally by email.</p>
+      </div>
     </div>
   </section>
   <section class="cta-band" aria-label="Start a project">
